@@ -1,13 +1,16 @@
 <?php
 
+abstract class Carroceria{
+    abstract protected function tamno();
+}
 
-class Carro // UpperCamelCase, { }
+class Carro extends Carroceria // UpperCamelCase, { }
 {
     //Propiedades
-    private string $marca; //Visibilidad (public, protected, private)
-    private string $color; // Tipos (bool, int, float, null, array, object)
-    private bool $cajaAutomatica; // LowerCamelCase
-    private float $cantidadGasolina;
+    protected string $marca; //Visibilidad (public, protected, private)
+    protected string $color; // Tipos (bool, int, float, null, array, object)
+    protected bool $cajaAutomatica; // LowerCamelCase
+    protected float $cantidadGasolina;
 
     //Variable
     private array  $marcasExcluidas = array('lenux', 'opel', 'porche');
@@ -24,9 +27,9 @@ class Carro // UpperCamelCase, { }
 
     public function __destruct() // Cierro Conexiones
     {
-        echo "<span style='color: darkred'>";
-        echo $this->getMarca()." se ha destruido<br/>";
-        echo "</span>";
+        //echo "<span style='color: darkred'>";
+        //echo $this->getMarca()." se ha destruido<br/>";
+        //echo "</span>";
     }
 
     /**
@@ -99,7 +102,7 @@ class Carro // UpperCamelCase, { }
 
 
     //Metodo
-    public function saludar(?string $nombre = "Usuario") : string{
+    public function saludar(?string $nombre = "Usuario") : string{ //visibilidad,function, nombre metodo
         return "Hola ".$nombre.", Soy ".$this->marca." de color ".$this->color." como estas?<br/>";
     }
 
@@ -122,16 +125,67 @@ class Carro // UpperCamelCase, { }
                 "<strong>Cantidad de Gasolina:</strong>".$this->getCantidadGasolina()."</br>";
     }
 
+    public function tamno()
+    {
+        return "Tamaño Grande";
+    }
 }
 
-$bmw = new Carro('BMW', 'Gris', "No"); // Crear el objeto bmw de la clase Carro; A esto se le llama instanciacion.
+class carroDeportivo extends carro{
+
+    private int $cilintraje;
+
+    /**
+     * carroDeportivo constructor.
+     */
+    public function __construct($marca = "Premium", $color = "Amarillo", $cajaAutomatica = "Si")
+    {
+        parent::__construct($marca, $color, $cajaAutomatica, $cilintraje = 2000);
+        $this->setCilintraje($cilintraje);
+        $this->setCantidadGasolina(50); //Por defecto de fabrica salen con 10 litros de gasolina
+    }
+
+    public function __destruct()
+    {
+        parent::__destruct();
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getCilintraje(): int
+    {
+        return $this->cilintraje;
+    }
+
+    /**
+     * @param int $cilintraje
+     */
+    public function setCilintraje(int $cilintraje): void
+    {
+        $this->cilintraje = $cilintraje;
+    }
+
+    public function saludar(?string $nombre = "Usuario"): string
+    {
+        return "Hola soy un deportivo muy veloz, Soy un ".$this->marca."<br/>";
+    }
+}
+
+$bmw = new Carro('BMW Nuevo', 'Gris', "No"); // Crear el objeto bmw de la clase Carro; A esto se le llama instanciacion.
 $mercedes = new Carro(); // Segundo objeto de la clase objeto
 $audi = new Carro("Audi", "Naranja", "si");
 
-echo $bmw->saludar('Diego');
-echo $mercedes->saludar('Juan');
-echo  $audi->saludar('Pedro');
-echo $audi->getMarca()." es de caja automatica: ".$audi->getCajaAutomatica()."</br>";
+$astonMartin = new CarroDeportivo ("Aston Martin");
+echo $astonMartin;
+echo $astonMartin->saludar();
+echo $astonMartin->tamno();
+
+//echo $bmw->saludar('Diego');
+//echo $mercedes->saludar('Juan');
+//echo  $audi->saludar('Pedro');
+//echo $audi->getMarca()." es de caja automatica: ".$audi->getCajaAutomatica()."</br>";
 
 $audi->tanquear(20) //30 Litros
     ->viajar(100) //28 Litros
@@ -140,10 +194,10 @@ $audi->tanquear(20) //30 Litros
     ->viajar(300) //68 Litros
     ->tanquear(20); //88 Litros
 
-echo $bmw;
+//echo $bmw;
 
-echo "Soy ".$audi->getMarca()." y tengo ".$audi->getCantidadGasolina()." Litros de Gasolina</br>";
-echo "Soy ".$bmw->getMarca()." y tengo ".$bmw->getCantidadGasolina()." Litros de Gasolina</br>";
+//echo "Soy ".$audi->getMarca()." y tengo ".$audi->getCantidadGasolina()." Litros de Gasolina</br>";
+//echo "Soy ".$bmw->getMarca()." y tengo ".$bmw->getCantidadGasolina()." Litros de Gasolina</br>";
 
 //Obtener una propiedad
 //echo $bmw->color."<br/>";   //Para obtener la propiedad de un objeto se usa el conecto ->
@@ -162,4 +216,4 @@ $mercedes->setMarca("Mercedes Benz");
 //echo $bmw->saludar('Diego')."<br/>"; //Llamar a un metodo
 //echo "Saludo: ".$bmw->marca." ".$bmw->saludar('Juan')."<br/>"; //Concatenar salida
 
-unset($mercedes);
+//unset($mercedes);
